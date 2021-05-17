@@ -4,24 +4,25 @@ from claseManejadorTalleres import ManejadorTalleres
 from claseManejadorInscripciones import ManejadorInscripciones
 from claseManejadorPersonas import ManejadorPersonas
 
-if __name__ == '__main__':
-    manejadorT = ManejadorTalleres()
-    manejadorP = ManejadorPersonas()
-    manejadorI = ManejadorInscripciones()
-    
+if __name__ == '__main__':  
     archivo = open('Talleres.csv')
     reader = csv.reader(archivo,delimiter=';')
     bandera = False
     for fila in reader:
         if not bandera:
             bandera = True
-            cant = int(fila[0])
+            cantTalleres = int(fila[0])
+            manejadorT = ManejadorTalleres(cantTalleres)
         else:
             manejadorT.addTaller(fila[0],fila[1],fila[2],fila[3])           
     archivo.close()
 
+    manejadorP = ManejadorPersonas()
+    manejadorI = ManejadorInscripciones()
+
+
     miMenu = Menu()
-    miMenu.define_menu('Menu de opciones',['[1]- Inscribir persona a taller','[2]- Consultar inscripcion','[3]- Consultar Inscriptos','[4]- Registrar pago','[5]- Guardar inscripciones','[0] - Salir'])
+    miMenu.define_menu('Menu de opciones',['[1]- Inscribir persona a taller','[2]- Consultar inscripcion','[3]- Consultar Inscriptos','[4]- Registrar pago','[5]- Guardar inscripciones','[0]- Salir'])
     miMenu.showMenu()
     op = miMenu.selectOption()
 
@@ -100,11 +101,6 @@ if __name__ == '__main__':
         if op == 5:
             archivo = open('Inscripciones.csv','a',newline='') #Crea el archivo o agrega al final si existe
             writer = csv.writer(archivo)
-            #Obtengo la posicion del puntero, si es 0 agrego el header
-            pos = archivo.tell()
-            if pos == 0:
-                header = ['Fecha','Pago','DNI','ID Taller']
-                writer.writerow(header)
             data = manejadorI.getAllData()
             writer.writerows(data)
             archivo.close()

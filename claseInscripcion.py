@@ -1,7 +1,3 @@
-from clasePersona import Persona
-from datetime import date
-from typing import Sized
-
 class Inscripcion:
     __fechaInscripcion = None
     __pago = False

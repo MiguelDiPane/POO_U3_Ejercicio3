@@ -1,10 +1,12 @@
+import numpy as np
 from claseTallerCapacitacion import TallerCapacitacion
 
 class ManejadorTalleres:
-    __talleres = []
+    __talleres = None
+    __actual = 0
 
-    def __init__(self):
-        self.__talleres = []
+    def __init__(self,dimension = 0):
+        self.__talleres = np.empty(dimension,dtype = TallerCapacitacion)
 
     def addTaller(self,idT,nom,vac,monto):
         try:
@@ -12,7 +14,8 @@ class ManejadorTalleres:
             vac = int(vac)
             monto = int(monto)
             newTaller = TallerCapacitacion(idT,nom,vac,monto)
-            self.__talleres.append(newTaller)
+            self.__talleres[self.__actual] = newTaller
+            self.__actual += 1
         except ValueError:
             print('Error: No se pudo cargar el taller')
      

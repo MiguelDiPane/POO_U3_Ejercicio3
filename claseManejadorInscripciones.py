@@ -1,21 +1,24 @@
 from datetime import date
+import numpy as np
 from claseInscripcion import Inscripcion
 from clasePersona import Persona
 from claseTallerCapacitacion import TallerCapacitacion
 
 class ManejadorInscripciones:
-    __inscripciones = []
-
+    __inscripciones = None
+    __actual = 0
 
     def __init__(self):
-        self.__inscripciones = []
-    
+        self.__inscripciones = np.empty(0, dtype=Inscripcion)
+
     def addInscripcion(self,pago,persona,taller):
         if type(pago) == bool and type(persona) == Persona and type(taller) == TallerCapacitacion:
             #Coloco la fecha del momento en que se realiza la inscripcion
             hoy = date.today()
+            self.__inscripciones.resize(len(self.__inscripciones) + 1)
             newInscripcion = Inscripcion(hoy,pago,persona,taller)
-            self.__inscripciones.append(newInscripcion)
+            self.__inscripciones[self.__actual] = newInscripcion
+            self.__actual += 1
             print('Inscripcion creada correctamente')
         else:
             print('No se pudo crear la inscripcion')
@@ -53,12 +56,12 @@ class ManejadorInscripciones:
         i = 0
         esta = False
         while i < len(self.__inscripciones) and not esta:
-            taller = self.__inscripciones[i].getTaller()
-            persona = self.__inscripciones[i].getPersona()
-            if miPersona == persona and miTaller == taller:
-                esta = True
-            else:
-                i +=1
+            if type(self.__inscripciones[i]) == Inscripcion:
+                taller = self.__inscripciones[i].getTaller()
+                persona = self.__inscripciones[i].getPersona()
+                if miPersona == persona and miTaller == taller:
+                    esta = True
+            i +=1
         if esta:
             print('La persona ya se encuentra inscripta en el taller!')
         return esta
